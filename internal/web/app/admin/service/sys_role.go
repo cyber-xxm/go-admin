@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	models2 "go-admin/internal/web/app/admin/models"
+	"go-admin/internal/web/app/admin/models"
 	"go-admin/internal/web/app/admin/service/dto"
 	cDto "go-admin/internal/web/dto"
 
@@ -20,9 +20,9 @@ type SysRole struct {
 }
 
 // GetPage 获取SysRole列表
-func (e *SysRole) GetPage(c *dto.SysRoleGetPageReq, list *[]models2.SysRole, count *int64) error {
+func (e *SysRole) GetPage(c *dto.SysRoleGetPageReq, list *[]models.SysRole, count *int64) error {
 	var err error
-	var data models2.SysRole
+	var data models.SysRole
 
 	err = e.Orm.Model(&data).Preload("SysMenu").
 		Scopes(
@@ -39,7 +39,7 @@ func (e *SysRole) GetPage(c *dto.SysRoleGetPageReq, list *[]models2.SysRole, cou
 }
 
 // Get 获取SysRole对象
-func (e *SysRole) Get(d *dto.SysRoleGetReq, model *models2.SysRole) error {
+func (e *SysRole) Get(d *dto.SysRoleGetReq, model *models.SysRole) error {
 	var err error
 	db := e.Orm.First(model, d.GetId())
 	err = db.Error
@@ -63,8 +63,8 @@ func (e *SysRole) Get(d *dto.SysRoleGetReq, model *models2.SysRole) error {
 // Insert 创建SysRole对象
 func (e *SysRole) Insert(c *dto.SysRoleInsertReq, cb *casbin.SyncedEnforcer) error {
 	var err error
-	var data models2.SysRole
-	var dataMenu []models2.SysMenu
+	var data models.SysRole
+	var dataMenu []models.SysMenu
 	err = e.Orm.Preload("SysApi").Where("menu_id in ?", c.MenuIds).Find(&dataMenu).Error
 	if err != nil {
 		e.Log.Errorf("db error:%s", err)
@@ -140,8 +140,8 @@ func (e *SysRole) Update(c *dto.SysRoleUpdateReq, cb *casbin.SyncedEnforcer) err
 			}
 		}()
 	}
-	var model = models2.SysRole{}
-	var mlist = make([]models2.SysMenu, 0)
+	var model = models.SysRole{}
+	var mlist = make([]models.SysMenu, 0)
 	tx.Preload("SysMenu").First(&model, c.GetId())
 	tx.Preload("SysApi").Where("menu_id in ?", c.MenuIds).Find(&mlist)
 	err = tx.Model(&model).Association("SysMenu").Delete(model.SysMenu)
@@ -205,7 +205,7 @@ func (e *SysRole) Remove(c *dto.SysRoleDeleteReq, cb *casbin.SyncedEnforcer) err
 			}
 		}()
 	}
-	var model = models2.SysRole{}
+	var model = models.SysRole{}
 	tx.Preload("SysMenu").Preload("SysDept").First(&model, c.GetId())
 	//删除 SysRole 时，同时删除角色所有 关联其它表 记录 (SysMenu 和 SysMenu)
 	db := tx.Select(clause.Associations).Delete(&model)
@@ -227,7 +227,7 @@ func (e *SysRole) Remove(c *dto.SysRoleDeleteReq, cb *casbin.SyncedEnforcer) err
 // GetRoleMenuId 获取角色对应的菜单ids
 func (e *SysRole) GetRoleMenuId(roleId int) ([]int, error) {
 	menuIds := make([]int, 0)
-	model := models2.SysRole{}
+	model := models.SysRole{}
 	model.RoleId = roleId
 	if err := e.Orm.Model(&model).Preload("SysMenu").First(&model).Error; err != nil {
 		return nil, err
@@ -252,8 +252,8 @@ func (e *SysRole) UpdateDataScope(c *dto.RoleDataScopeReq) *SysRole {
 			}
 		}()
 	}
-	var dlist = make([]models2.SysDept, 0)
-	var model = models2.SysRole{}
+	var dlist = make([]models.SysDept, 0)
+	var model = models.SysRole{}
 	tx.Preload("SysDept").First(&model, c.RoleId)
 	tx.Where("dept_id in ?", c.DeptIds).Find(&dlist)
 	// 删除SysRole 和 SysDept 的关联关系
@@ -293,7 +293,7 @@ func (e *SysRole) UpdateStatus(c *dto.UpdateStatusReq) error {
 			}
 		}()
 	}
-	var model = models2.SysRole{}
+	var model = models.SysRole{}
 	tx.First(&model, c.GetId())
 	c.Generate(&model)
 	// 更新关联的数据，使用 FullSaveAssociations 模式
@@ -309,7 +309,7 @@ func (e *SysRole) UpdateStatus(c *dto.UpdateStatusReq) error {
 }
 
 // GetWithName 获取SysRole对象
-func (e *SysRole) GetWithName(d *dto.SysRoleByName, model *models2.SysRole) *SysRole {
+func (e *SysRole) GetWithName(d *dto.SysRoleByName, model *models.SysRole) *SysRole {
 	var err error
 	db := e.Orm.Where("role_name = ?", d.RoleName).First(model)
 	err = db.Error
@@ -336,7 +336,7 @@ func (e *SysRole) GetWithName(d *dto.SysRoleByName, model *models2.SysRole) *Sys
 // GetById 获取SysRole对象
 func (e *SysRole) GetById(roleId int) ([]string, error) {
 	permissions := make([]string, 0)
-	model := models2.SysRole{}
+	model := models.SysRole{}
 	model.RoleId = roleId
 	if err := e.Orm.Model(&model).Preload("SysMenu").First(&model).Error; err != nil {
 		return nil, err

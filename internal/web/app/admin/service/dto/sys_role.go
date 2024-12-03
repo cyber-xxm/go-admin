@@ -2,7 +2,7 @@ package dto
 
 import (
 	common "go-admin/internal/database/dto"
-	models2 "go-admin/internal/web/app/admin/models"
+	"go-admin/internal/web/app/admin/models"
 	"go-admin/internal/web/dto"
 )
 
@@ -33,23 +33,23 @@ func (m *SysRoleGetPageReq) GetNeedSearch() interface{} {
 }
 
 type SysRoleInsertReq struct {
-	RoleId    int               `uri:"id" comment:"角色编码"`        // 角色编码
-	RoleName  string            `form:"roleName" comment:"角色名称"` // 角色名称
-	Status    string            `form:"status" comment:"状态"`     // 状态 1禁用 2正常
-	RoleKey   string            `form:"roleKey" comment:"角色代码"`  // 角色代码
-	RoleSort  int               `form:"roleSort" comment:"角色排序"` // 角色排序
-	Flag      string            `form:"flag" comment:"标记"`       // 标记
-	Remark    string            `form:"remark" comment:"备注"`     // 备注
-	Admin     bool              `form:"admin" comment:"是否管理员"`
-	DataScope string            `form:"dataScope"`
-	SysMenu   []models2.SysMenu `form:"sysMenu"`
-	MenuIds   []int             `form:"menuIds"`
-	SysDept   []models2.SysDept `form:"sysDept"`
-	DeptIds   []int             `form:"deptIds"`
+	RoleId    int              `uri:"id" comment:"角色编码"`        // 角色编码
+	RoleName  string           `form:"roleName" comment:"角色名称"` // 角色名称
+	Status    string           `form:"status" comment:"状态"`     // 状态 1禁用 2正常
+	RoleKey   string           `form:"roleKey" comment:"角色代码"`  // 角色代码
+	RoleSort  int              `form:"roleSort" comment:"角色排序"` // 角色排序
+	Flag      string           `form:"flag" comment:"标记"`       // 标记
+	Remark    string           `form:"remark" comment:"备注"`     // 备注
+	Admin     bool             `form:"admin" comment:"是否管理员"`
+	DataScope string           `form:"dataScope"`
+	SysMenu   []models.SysMenu `form:"sysMenu"`
+	MenuIds   []int            `form:"menuIds"`
+	SysDept   []models.SysDept `form:"sysDept"`
+	DeptIds   []int            `form:"deptIds"`
 	common.ControlBy
 }
 
-func (s *SysRoleInsertReq) Generate(model *models2.SysRole) {
+func (s *SysRoleInsertReq) Generate(model *models.SysRole) {
 	if s.RoleId != 0 {
 		model.RoleId = s.RoleId
 	}
@@ -70,23 +70,23 @@ func (s *SysRoleInsertReq) GetId() interface{} {
 }
 
 type SysRoleUpdateReq struct {
-	RoleId    int               `uri:"id" comment:"角色编码"`        // 角色编码
-	RoleName  string            `form:"roleName" comment:"角色名称"` // 角色名称
-	Status    string            `form:"status" comment:"状态"`     // 状态
-	RoleKey   string            `form:"roleKey" comment:"角色代码"`  // 角色代码
-	RoleSort  int               `form:"roleSort" comment:"角色排序"` // 角色排序
-	Flag      string            `form:"flag" comment:"标记"`       // 标记
-	Remark    string            `form:"remark" comment:"备注"`     // 备注
-	Admin     bool              `form:"admin" comment:"是否管理员"`
-	DataScope string            `form:"dataScope"`
-	SysMenu   []models2.SysMenu `form:"sysMenu"`
-	MenuIds   []int             `form:"menuIds"`
-	SysDept   []models2.SysDept `form:"sysDept"`
-	DeptIds   []int             `form:"deptIds"`
+	RoleId    int              `uri:"id" comment:"角色编码"`        // 角色编码
+	RoleName  string           `form:"roleName" comment:"角色名称"` // 角色名称
+	Status    string           `form:"status" comment:"状态"`     // 状态
+	RoleKey   string           `form:"roleKey" comment:"角色代码"`  // 角色代码
+	RoleSort  int              `form:"roleSort" comment:"角色排序"` // 角色排序
+	Flag      string           `form:"flag" comment:"标记"`       // 标记
+	Remark    string           `form:"remark" comment:"备注"`     // 备注
+	Admin     bool             `form:"admin" comment:"是否管理员"`
+	DataScope string           `form:"dataScope"`
+	SysMenu   []models.SysMenu `form:"sysMenu"`
+	MenuIds   []int            `form:"menuIds"`
+	SysDept   []models.SysDept `form:"sysDept"`
+	DeptIds   []int            `form:"deptIds"`
 	common.ControlBy
 }
 
-func (s *SysRoleUpdateReq) Generate(model *models2.SysRole) {
+func (s *SysRoleUpdateReq) Generate(model *models.SysRole) {
 	if s.RoleId != 0 {
 		model.RoleId = s.RoleId
 	}
@@ -112,7 +112,7 @@ type UpdateStatusReq struct {
 	common.ControlBy
 }
 
-func (s *UpdateStatusReq) Generate(model *models2.SysRole) {
+func (s *UpdateStatusReq) Generate(model *models.SysRole) {
 	if s.RoleId != 0 {
 		model.RoleId = s.RoleId
 	}
@@ -150,7 +150,7 @@ type RoleDataScopeReq struct {
 	DeptIds   []int  `json:"deptIds"`
 }
 
-func (s *RoleDataScopeReq) Generate(model *models2.SysRole) {
+func (s *RoleDataScopeReq) Generate(model *models.SysRole) {
 	if s.RoleId != 0 {
 		model.RoleId = s.RoleId
 	}

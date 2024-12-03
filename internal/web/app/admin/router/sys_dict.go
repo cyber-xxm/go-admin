@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
-	apis2 "go-admin/internal/web/app/admin/apis"
+	"go-admin/internal/web/app/admin/apis"
 	"go-admin/internal/web/middleware"
 )
 
@@ -12,8 +12,8 @@ func init() {
 }
 
 func registerDictRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
-	dictApi := apis2.SysDictType{}
-	dataApi := apis2.SysDictData{}
+	dictApi := apis.SysDictType{}
+	dataApi := apis.SysDictData{}
 	dicts := v1.Group("/dict").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
 

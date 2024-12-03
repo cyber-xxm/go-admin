@@ -2,8 +2,8 @@ package actions
 
 import (
 	"errors"
-	dto3 "go-admin/internal/database/dto"
-	dto2 "go-admin/internal/web/dto"
+	dto2 "go-admin/internal/database/dto"
+	"go-admin/internal/web/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +14,7 @@ import (
 )
 
 // IndexAction 通用查询动作
-func IndexAction(m dto3.ActiveRecord, d dto2.Index, f func() interface{}) gin.HandlerFunc {
+func IndexAction(m dto2.ActiveRecord, d dto.Index, f func() interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db, err := pkg.GetOrm(c)
 		if err != nil {
@@ -40,8 +40,8 @@ func IndexAction(m dto3.ActiveRecord, d dto2.Index, f func() interface{}) gin.Ha
 
 		err = db.WithContext(c).Model(object).
 			Scopes(
-				dto2.MakeCondition(req.GetNeedSearch()),
-				dto2.Paginate(req.GetPageSize(), req.GetPageIndex()),
+				dto.MakeCondition(req.GetNeedSearch()),
+				dto.Paginate(req.GetPageSize(), req.GetPageIndex()),
 				Permission(object.TableName(), p),
 			).
 			Find(list).Limit(-1).Offset(-1).

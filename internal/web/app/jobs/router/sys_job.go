@@ -4,10 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
 	"go-admin/internal/web/app/jobs/apis"
-	models2 "go-admin/internal/web/app/jobs/models"
-	dto2 "go-admin/internal/web/app/jobs/service/dto"
+	"go-admin/internal/web/app/jobs/models"
+	"go-admin/internal/web/app/jobs/service/dto"
 	"go-admin/internal/web/middleware"
-	actions2 "go-admin/internal/web/middleware/actions"
+	"go-admin/internal/web/middleware/actions"
 )
 
 func init() {
@@ -19,17 +19,17 @@ func registerSysJobRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddlew
 
 	r := v1.Group("/sysjob").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
-		sysJob := &models2.SysJob{}
-		r.GET("", actions2.PermissionAction(), actions2.IndexAction(sysJob, new(dto2.SysJobSearch), func() interface{} {
-			list := make([]models2.SysJob, 0)
+		sysJob := &models.SysJob{}
+		r.GET("", actions.PermissionAction(), actions.IndexAction(sysJob, new(dto.SysJobSearch), func() interface{} {
+			list := make([]models.SysJob, 0)
 			return &list
 		}))
-		r.GET("/:id", actions2.PermissionAction(), actions2.ViewAction(new(dto2.SysJobById), func() interface{} {
-			return &dto2.SysJobItem{}
+		r.GET("/:id", actions.PermissionAction(), actions.ViewAction(new(dto.SysJobById), func() interface{} {
+			return &dto.SysJobItem{}
 		}))
-		r.POST("", actions2.CreateAction(new(dto2.SysJobControl)))
-		r.PUT("", actions2.PermissionAction(), actions2.UpdateAction(new(dto2.SysJobControl)))
-		r.DELETE("", actions2.PermissionAction(), actions2.DeleteAction(new(dto2.SysJobById)))
+		r.POST("", actions.CreateAction(new(dto.SysJobControl)))
+		r.PUT("", actions.PermissionAction(), actions.UpdateAction(new(dto.SysJobControl)))
+		r.DELETE("", actions.PermissionAction(), actions.DeleteAction(new(dto.SysJobById)))
 	}
 	sysJob := apis.SysJob{}
 

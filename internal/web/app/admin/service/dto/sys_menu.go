@@ -2,7 +2,7 @@ package dto
 
 import (
 	common "go-admin/internal/database/dto"
-	models2 "go-admin/internal/web/app/admin/models"
+	"go-admin/internal/web/app/admin/models"
 	"go-admin/internal/web/dto"
 )
 
@@ -18,28 +18,28 @@ func (m *SysMenuGetPageReq) GetNeedSearch() interface{} {
 }
 
 type SysMenuInsertReq struct {
-	MenuId     int              `uri:"id" comment:"编码"`            // 编码
-	MenuName   string           `form:"menuName" comment:"菜单name"` //菜单name
-	Title      string           `form:"title" comment:"显示名称"`      //显示名称
-	Icon       string           `form:"icon" comment:"图标"`         //图标
-	Path       string           `form:"path" comment:"路径"`         //路径
-	Paths      string           `form:"paths" comment:"id路径"`      //id路径
-	MenuType   string           `form:"menuType" comment:"菜单类型"`   //菜单类型
-	SysApi     []models2.SysApi `form:"sysApi"`
-	Apis       []int            `form:"apis"`
-	Action     string           `form:"action" comment:"请求方式"`      //请求方式
-	Permission string           `form:"permission" comment:"权限编码"`  //权限编码
-	ParentId   int              `form:"parentId" comment:"上级菜单"`    //上级菜单
-	NoCache    bool             `form:"noCache" comment:"是否缓存"`     //是否缓存
-	Breadcrumb string           `form:"breadcrumb" comment:"是否面包屑"` //是否面包屑
-	Component  string           `form:"component" comment:"组件"`     //组件
-	Sort       int              `form:"sort" comment:"排序"`          //排序
-	Visible    string           `form:"visible" comment:"是否显示"`     //是否显示
-	IsFrame    string           `form:"isFrame" comment:"是否frame"`  //是否frame
+	MenuId     int             `uri:"id" comment:"编码"`            // 编码
+	MenuName   string          `form:"menuName" comment:"菜单name"` //菜单name
+	Title      string          `form:"title" comment:"显示名称"`      //显示名称
+	Icon       string          `form:"icon" comment:"图标"`         //图标
+	Path       string          `form:"path" comment:"路径"`         //路径
+	Paths      string          `form:"paths" comment:"id路径"`      //id路径
+	MenuType   string          `form:"menuType" comment:"菜单类型"`   //菜单类型
+	SysApi     []models.SysApi `form:"sysApi"`
+	Apis       []int           `form:"apis"`
+	Action     string          `form:"action" comment:"请求方式"`      //请求方式
+	Permission string          `form:"permission" comment:"权限编码"`  //权限编码
+	ParentId   int             `form:"parentId" comment:"上级菜单"`    //上级菜单
+	NoCache    bool            `form:"noCache" comment:"是否缓存"`     //是否缓存
+	Breadcrumb string          `form:"breadcrumb" comment:"是否面包屑"` //是否面包屑
+	Component  string          `form:"component" comment:"组件"`     //组件
+	Sort       int             `form:"sort" comment:"排序"`          //排序
+	Visible    string          `form:"visible" comment:"是否显示"`     //是否显示
+	IsFrame    string          `form:"isFrame" comment:"是否frame"`  //是否frame
 	common.ControlBy
 }
 
-func (s *SysMenuInsertReq) Generate(model *models2.SysMenu) {
+func (s *SysMenuInsertReq) Generate(model *models.SysMenu) {
 	if s.MenuId != 0 {
 		model.MenuId = s.MenuId
 	}
@@ -72,28 +72,28 @@ func (s *SysMenuInsertReq) GetId() interface{} {
 }
 
 type SysMenuUpdateReq struct {
-	MenuId     int              `uri:"id" comment:"编码"`            // 编码
-	MenuName   string           `form:"menuName" comment:"菜单name"` //菜单name
-	Title      string           `form:"title" comment:"显示名称"`      //显示名称
-	Icon       string           `form:"icon" comment:"图标"`         //图标
-	Path       string           `form:"path" comment:"路径"`         //路径
-	Paths      string           `form:"paths" comment:"id路径"`      //id路径
-	MenuType   string           `form:"menuType" comment:"菜单类型"`   //菜单类型
-	SysApi     []models2.SysApi `form:"sysApi"`
-	Apis       []int            `form:"apis"`
-	Action     string           `form:"action" comment:"请求方式"`      //请求方式
-	Permission string           `form:"permission" comment:"权限编码"`  //权限编码
-	ParentId   int              `form:"parentId" comment:"上级菜单"`    //上级菜单
-	NoCache    bool             `form:"noCache" comment:"是否缓存"`     //是否缓存
-	Breadcrumb string           `form:"breadcrumb" comment:"是否面包屑"` //是否面包屑
-	Component  string           `form:"component" comment:"组件"`     //组件
-	Sort       int              `form:"sort" comment:"排序"`          //排序
-	Visible    string           `form:"visible" comment:"是否显示"`     //是否显示
-	IsFrame    string           `form:"isFrame" comment:"是否frame"`  //是否frame
+	MenuId     int             `uri:"id" comment:"编码"`            // 编码
+	MenuName   string          `form:"menuName" comment:"菜单name"` //菜单name
+	Title      string          `form:"title" comment:"显示名称"`      //显示名称
+	Icon       string          `form:"icon" comment:"图标"`         //图标
+	Path       string          `form:"path" comment:"路径"`         //路径
+	Paths      string          `form:"paths" comment:"id路径"`      //id路径
+	MenuType   string          `form:"menuType" comment:"菜单类型"`   //菜单类型
+	SysApi     []models.SysApi `form:"sysApi"`
+	Apis       []int           `form:"apis"`
+	Action     string          `form:"action" comment:"请求方式"`      //请求方式
+	Permission string          `form:"permission" comment:"权限编码"`  //权限编码
+	ParentId   int             `form:"parentId" comment:"上级菜单"`    //上级菜单
+	NoCache    bool            `form:"noCache" comment:"是否缓存"`     //是否缓存
+	Breadcrumb string          `form:"breadcrumb" comment:"是否面包屑"` //是否面包屑
+	Component  string          `form:"component" comment:"组件"`     //组件
+	Sort       int             `form:"sort" comment:"排序"`          //排序
+	Visible    string          `form:"visible" comment:"是否显示"`     //是否显示
+	IsFrame    string          `form:"isFrame" comment:"是否frame"`  //是否frame
 	common.ControlBy
 }
 
-func (s *SysMenuUpdateReq) Generate(model *models2.SysMenu) {
+func (s *SysMenuUpdateReq) Generate(model *models.SysMenu) {
 	if s.MenuId != 0 {
 		model.MenuId = s.MenuId
 	}
@@ -149,7 +149,7 @@ type MenuLabel struct {
 }
 
 type MenuRole struct {
-	models2.SysMenu
+	models.SysMenu
 	IsSelect bool `json:"is_select" gorm:"-"`
 }
 

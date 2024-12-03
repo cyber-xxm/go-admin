@@ -1,9 +1,9 @@
 package router
 
 import (
-	apis2 "go-admin/internal/web/app/admin/apis"
+	"go-admin/internal/web/app/admin/apis"
 	"go-admin/internal/web/middleware"
-	handler2 "go-admin/internal/web/middleware/handler"
+	"go-admin/internal/web/middleware/handler"
 	"mime"
 
 	"github.com/go-admin-team/go-admin-core/sdk/config"
@@ -39,9 +39,9 @@ func sysBaseRouter(r *gin.RouterGroup) {
 	go ws.WebsocketManager.SendAllService()
 
 	if config.ApplicationConfig.Mode != "prod" {
-		r.GET("/", apis2.GoAdmin)
+		r.GET("/", apis.GoAdmin)
 	}
-	r.GET("/info", handler2.Ping)
+	r.GET("/info", handler.Ping)
 }
 
 func sysStaticFileRouter(r *gin.RouterGroup) {
@@ -76,13 +76,13 @@ func sysCheckRoleRouterInit(r *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddle
 }
 
 func registerBaseRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
-	api := apis2.SysMenu{}
-	api2 := apis2.SysDept{}
+	menu := apis.SysMenu{}
+	dept := apis.SysDept{}
 	v1auth := v1.Group("").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
-		v1auth.GET("/roleMenuTreeselect/:roleId", api.GetMenuTreeSelect)
+		v1auth.GET("/roleMenuTreeselect/:roleId", menu.GetMenuTreeSelect)
 		//v1.GET("/menuTreeselect", api.GetMenuTreeSelect)
-		v1auth.GET("/roleDeptTreeselect/:roleId", api2.GetDeptTreeRoleSelect)
-		v1auth.POST("/logout", handler2.LogOut)
+		v1auth.GET("/roleDeptTreeselect/:roleId", dept.GetDeptTreeRoleSelect)
+		v1auth.POST("/logout", handler.LogOut)
 	}
 }

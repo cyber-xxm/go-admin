@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 	cDto "go-admin/internal/database/dto"
-	models2 "go-admin/internal/web/app/admin/models"
+	"go-admin/internal/web/app/admin/models"
 	"go-admin/internal/web/app/admin/service/dto"
 	dto2 "go-admin/internal/web/dto"
 	"sort"
@@ -21,8 +21,8 @@ type SysMenu struct {
 }
 
 // GetPage 获取SysMenu列表
-func (e *SysMenu) GetPage(c *dto.SysMenuGetPageReq, menus *[]models2.SysMenu) *SysMenu {
-	var menu = make([]models2.SysMenu, 0)
+func (e *SysMenu) GetPage(c *dto.SysMenuGetPageReq, menus *[]models.SysMenu) *SysMenu {
+	var menu = make([]models.SysMenu, 0)
 	err := e.getPage(c, &menu).Error
 	if err != nil {
 		_ = e.AddError(err)
@@ -39,9 +39,9 @@ func (e *SysMenu) GetPage(c *dto.SysMenuGetPageReq, menus *[]models2.SysMenu) *S
 }
 
 // getPage 菜单分页列表
-func (e *SysMenu) getPage(c *dto.SysMenuGetPageReq, list *[]models2.SysMenu) *SysMenu {
+func (e *SysMenu) getPage(c *dto.SysMenuGetPageReq, list *[]models.SysMenu) *SysMenu {
 	var err error
-	var data models2.SysMenu
+	var data models.SysMenu
 
 	err = e.Orm.Model(&data).
 		Scopes(
@@ -58,9 +58,9 @@ func (e *SysMenu) getPage(c *dto.SysMenuGetPageReq, list *[]models2.SysMenu) *Sy
 }
 
 // Get 获取SysMenu对象
-func (e *SysMenu) Get(d *dto.SysMenuGetReq, model *models2.SysMenu) *SysMenu {
+func (e *SysMenu) Get(d *dto.SysMenuGetReq, model *models.SysMenu) *SysMenu {
 	var err error
-	var data models2.SysMenu
+	var data models.SysMenu
 
 	db := e.Orm.Model(&data).Preload("SysApi").
 		First(model, d.GetId())
@@ -87,7 +87,7 @@ func (e *SysMenu) Get(d *dto.SysMenuGetReq, model *models2.SysMenu) *SysMenu {
 // Insert 创建SysMenu对象
 func (e *SysMenu) Insert(c *dto.SysMenuInsertReq) *SysMenu {
 	var err error
-	var data models2.SysMenu
+	var data models.SysMenu
 	c.Generate(&data)
 	tx := e.Orm.Debug().Begin()
 	defer func() {
@@ -120,10 +120,10 @@ func (e *SysMenu) Insert(c *dto.SysMenuInsertReq) *SysMenu {
 	return e
 }
 
-func (e *SysMenu) initPaths(tx *gorm.DB, menu *models2.SysMenu) error {
+func (e *SysMenu) initPaths(tx *gorm.DB, menu *models.SysMenu) error {
 	var err error
-	var data models2.SysMenu
-	parentMenu := new(models2.SysMenu)
+	var data models.SysMenu
+	parentMenu := new(models.SysMenu)
 	if menu.ParentId != 0 {
 		err = tx.Model(&data).First(parentMenu, menu.ParentId).Error
 		if err != nil {
@@ -152,8 +152,8 @@ func (e *SysMenu) Update(c *dto.SysMenuUpdateReq) *SysMenu {
 			tx.Commit()
 		}
 	}()
-	var alist = make([]models2.SysApi, 0)
-	var model = models2.SysMenu{}
+	var alist = make([]models.SysApi, 0)
+	var model = models.SysMenu{}
 	tx.Preload("SysApi").First(&model, c.GetId())
 	oldPath := model.Paths
 	tx.Where("id in ?", c.Apis).Find(&alist)
@@ -175,7 +175,7 @@ func (e *SysMenu) Update(c *dto.SysMenuUpdateReq) *SysMenu {
 		_ = e.AddError(errors.New("无权更新该数据"))
 		return e
 	}
-	var menuList []models2.SysMenu
+	var menuList []models.SysMenu
 	tx.Where("paths like ?", oldPath+"%").Find(&menuList)
 	for _, v := range menuList {
 		v.Paths = strings.Replace(v.Paths, oldPath, model.Paths, 1)
@@ -187,7 +187,7 @@ func (e *SysMenu) Update(c *dto.SysMenuUpdateReq) *SysMenu {
 // Remove 删除SysMenu
 func (e *SysMenu) Remove(d *dto.SysMenuDeleteReq) *SysMenu {
 	var err error
-	var data models2.SysMenu
+	var data models.SysMenu
 
 	db := e.Orm.Model(&data).Delete(&data, d.Ids)
 	if err = db.Error; err != nil {
@@ -202,9 +202,9 @@ func (e *SysMenu) Remove(d *dto.SysMenuDeleteReq) *SysMenu {
 }
 
 // GetList 获取菜单数据
-func (e *SysMenu) GetList(c *dto.SysMenuGetPageReq, list *[]models2.SysMenu) error {
+func (e *SysMenu) GetList(c *dto.SysMenuGetPageReq, list *[]models.SysMenu) error {
 	var err error
-	var data models2.SysMenu
+	var data models.SysMenu
 
 	err = e.Orm.Model(&data).
 		Scopes(
@@ -220,7 +220,7 @@ func (e *SysMenu) GetList(c *dto.SysMenuGetPageReq, list *[]models2.SysMenu) err
 
 // SetLabel 修改角色中 设置菜单基础数据
 func (e *SysMenu) SetLabel() (m []dto.MenuLabel, err error) {
-	var list []models2.SysMenu
+	var list []models.SysMenu
 	err = e.GetList(&dto.SysMenuGetPageReq{}, &list)
 
 	m = make([]dto.MenuLabel, 0)
@@ -239,9 +239,9 @@ func (e *SysMenu) SetLabel() (m []dto.MenuLabel, err error) {
 }
 
 // GetSysMenuByRoleName 左侧菜单
-func (e *SysMenu) GetSysMenuByRoleName(roleName ...string) ([]models2.SysMenu, error) {
-	var MenuList []models2.SysMenu
-	var role models2.SysRole
+func (e *SysMenu) GetSysMenuByRoleName(roleName ...string) ([]models.SysMenu, error) {
+	var MenuList []models.SysMenu
+	var role models.SysRole
 	var err error
 	admin := false
 	for _, s := range roleName {
@@ -251,7 +251,7 @@ func (e *SysMenu) GetSysMenuByRoleName(roleName ...string) ([]models2.SysMenu, e
 	}
 
 	if len(roleName) > 0 && admin {
-		var data []models2.SysMenu
+		var data []models.SysMenu
 		err = e.Orm.Where(" menu_type in ('M','C')").
 			Order("sort").
 			Find(&data).
@@ -272,7 +272,7 @@ func (e *SysMenu) GetSysMenuByRoleName(roleName ...string) ([]models2.SysMenu, e
 }
 
 // menuLabelCall 递归构造组织数据
-func menuLabelCall(eList *[]models2.SysMenu, dept dto.MenuLabel) dto.MenuLabel {
+func menuLabelCall(eList *[]models.SysMenu, dept dto.MenuLabel) dto.MenuLabel {
 	list := *eList
 
 	min := make([]dto.MenuLabel, 0)
@@ -301,16 +301,16 @@ func menuLabelCall(eList *[]models2.SysMenu, dept dto.MenuLabel) dto.MenuLabel {
 }
 
 // menuCall 构建菜单树
-func menuCall(menuList *[]models2.SysMenu, menu models2.SysMenu) models2.SysMenu {
+func menuCall(menuList *[]models.SysMenu, menu models.SysMenu) models.SysMenu {
 	list := *menuList
 
-	min := make([]models2.SysMenu, 0)
+	min := make([]models.SysMenu, 0)
 	for j := 0; j < len(list); j++ {
 
 		if menu.MenuId != list[j].ParentId {
 			continue
 		}
-		mi := models2.SysMenu{}
+		mi := models.SysMenu{}
 		mi.MenuId = list[j].MenuId
 		mi.MenuName = list[j].MenuName
 		mi.Title = list[j].Title
@@ -327,7 +327,7 @@ func menuCall(menuList *[]models2.SysMenu, menu models2.SysMenu) models2.SysMenu
 		mi.Visible = list[j].Visible
 		mi.CreatedAt = list[j].CreatedAt
 		mi.SysApi = list[j].SysApi
-		mi.Children = []models2.SysMenu{}
+		mi.Children = []models.SysMenu{}
 
 		if mi.MenuType != cDto.Button {
 			ms := menuCall(menuList, mi)
@@ -340,7 +340,7 @@ func menuCall(menuList *[]models2.SysMenu, menu models2.SysMenu) models2.SysMenu
 	return menu
 }
 
-func menuDistinct(menuList []models2.SysMenu) (result []models2.SysMenu) {
+func menuDistinct(menuList []models.SysMenu) (result []models.SysMenu) {
 	distinctMap := make(map[int]struct{}, len(menuList))
 	for _, menu := range menuList {
 		if _, ok := distinctMap[menu.MenuId]; !ok {
@@ -351,11 +351,11 @@ func menuDistinct(menuList []models2.SysMenu) (result []models2.SysMenu) {
 	return result
 }
 
-func recursiveSetMenu(orm *gorm.DB, mIds []int, menus *[]models2.SysMenu) error {
+func recursiveSetMenu(orm *gorm.DB, mIds []int, menus *[]models.SysMenu) error {
 	if len(mIds) == 0 || menus == nil {
 		return nil
 	}
-	var subMenus []models2.SysMenu
+	var subMenus []models.SysMenu
 	err := orm.Where(fmt.Sprintf(" menu_type in ('%s', '%s', '%s') and menu_id in ?",
 		cDto.Directory, cDto.Menu, cDto.Button), mIds).Order("sort").Find(&subMenus).Error
 	if err != nil {
@@ -375,9 +375,9 @@ func recursiveSetMenu(orm *gorm.DB, mIds []int, menus *[]models2.SysMenu) error 
 }
 
 // SetMenuRole 获取左侧菜单树使用
-func (e *SysMenu) SetMenuRole(roleName string) (m []models2.SysMenu, err error) {
+func (e *SysMenu) SetMenuRole(roleName string) (m []models.SysMenu, err error) {
 	menus, err := e.getByRoleName(roleName)
-	m = make([]models2.SysMenu, 0)
+	m = make([]models.SysMenu, 0)
 	for i := 0; i < len(menus); i++ {
 		if menus[i].ParentId != 0 {
 			continue
@@ -388,10 +388,10 @@ func (e *SysMenu) SetMenuRole(roleName string) (m []models2.SysMenu, err error) 
 	return
 }
 
-func (e *SysMenu) getByRoleName(roleName string) ([]models2.SysMenu, error) {
-	var role models2.SysRole
+func (e *SysMenu) getByRoleName(roleName string) ([]models.SysMenu, error) {
+	var role models.SysRole
 	var err error
-	data := make([]models2.SysMenu, 0)
+	data := make([]models.SysMenu, 0)
 
 	if roleName == "admin" {
 		err = e.Orm.Where(" menu_type in ('M','C') and deleted_at is null").
@@ -416,6 +416,6 @@ func (e *SysMenu) getByRoleName(roleName string) ([]models2.SysMenu, error) {
 		}
 	}
 
-	sort.Sort(models2.SysMenuSlice(data))
+	sort.Sort(models.SysMenuSlice(data))
 	return data, err
 }

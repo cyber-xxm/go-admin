@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"go-admin/internal/web/app/admin/models"
-	dto2 "go-admin/internal/web/app/admin/service/dto"
+	"go-admin/internal/web/app/admin/service/dto"
 	cDto "go-admin/internal/web/dto"
 
 	log "github.com/go-admin-team/go-admin-core/logger"
@@ -34,7 +34,7 @@ type SysDept struct {
 //}
 
 // Get 获取SysDept对象
-func (e *SysDept) Get(d *dto2.SysDeptGetReq, model *models.SysDept) error {
+func (e *SysDept) Get(d *dto.SysDeptGetReq, model *models.SysDept) error {
 	var err error
 	var data models.SysDept
 
@@ -56,7 +56,7 @@ func (e *SysDept) Get(d *dto2.SysDeptGetReq, model *models.SysDept) error {
 }
 
 // Insert 创建SysDept对象
-func (e *SysDept) Insert(c *dto2.SysDeptInsertReq) error {
+func (e *SysDept) Insert(c *dto.SysDeptInsertReq) error {
 	var err error
 	var data models.SysDept
 	c.Generate(&data)
@@ -91,7 +91,7 @@ func (e *SysDept) Insert(c *dto2.SysDeptInsertReq) error {
 }
 
 // Update 修改SysDept对象
-func (e *SysDept) Update(c *dto2.SysDeptUpdateReq) error {
+func (e *SysDept) Update(c *dto.SysDeptUpdateReq) error {
 	var err error
 	var model = models.SysDept{}
 	tx := e.Orm.Debug().Begin()
@@ -126,7 +126,7 @@ func (e *SysDept) Update(c *dto2.SysDeptUpdateReq) error {
 }
 
 // Remove 删除SysDept
-func (e *SysDept) Remove(d *dto2.SysDeptDeleteReq) error {
+func (e *SysDept) Remove(d *dto.SysDeptDeleteReq) error {
 	var err error
 	var data models.SysDept
 
@@ -143,7 +143,7 @@ func (e *SysDept) Remove(d *dto2.SysDeptDeleteReq) error {
 }
 
 // GetSysDeptList 获取组织数据
-func (e *SysDept) getList(c *dto2.SysDeptGetPageReq, list *[]models.SysDept) error {
+func (e *SysDept) getList(c *dto.SysDeptGetPageReq, list *[]models.SysDept) error {
 	var err error
 	var data models.SysDept
 
@@ -160,16 +160,16 @@ func (e *SysDept) getList(c *dto2.SysDeptGetPageReq, list *[]models.SysDept) err
 }
 
 // SetDeptTree 设置组织数据
-func (e *SysDept) SetDeptTree(c *dto2.SysDeptGetPageReq) (m []dto2.DeptLabel, err error) {
+func (e *SysDept) SetDeptTree(c *dto.SysDeptGetPageReq) (m []dto.DeptLabel, err error) {
 	var list []models.SysDept
 	err = e.getList(c, &list)
 
-	m = make([]dto2.DeptLabel, 0)
+	m = make([]dto.DeptLabel, 0)
 	for i := 0; i < len(list); i++ {
 		if list[i].ParentId != 0 {
 			continue
 		}
-		e := dto2.DeptLabel{}
+		e := dto.DeptLabel{}
 		e.Id = list[i].DeptId
 		e.Label = list[i].DeptName
 		deptsInfo := deptTreeCall(&list, e)
@@ -180,14 +180,14 @@ func (e *SysDept) SetDeptTree(c *dto2.SysDeptGetPageReq) (m []dto2.DeptLabel, er
 }
 
 // Call 递归构造组织数据
-func deptTreeCall(deptList *[]models.SysDept, dept dto2.DeptLabel) dto2.DeptLabel {
+func deptTreeCall(deptList *[]models.SysDept, dept dto.DeptLabel) dto.DeptLabel {
 	list := *deptList
-	childrenList := make([]dto2.DeptLabel, 0)
+	childrenList := make([]dto.DeptLabel, 0)
 	for j := 0; j < len(list); j++ {
 		if dept.Id != list[j].ParentId {
 			continue
 		}
-		mi := dto2.DeptLabel{Id: list[j].DeptId, Label: list[j].DeptName, Children: []dto2.DeptLabel{}}
+		mi := dto.DeptLabel{Id: list[j].DeptId, Label: list[j].DeptName, Children: []dto.DeptLabel{}}
 		ms := deptTreeCall(deptList, mi)
 		childrenList = append(childrenList, ms)
 	}
@@ -196,7 +196,7 @@ func deptTreeCall(deptList *[]models.SysDept, dept dto2.DeptLabel) dto2.DeptLabe
 }
 
 // SetDeptPage 设置dept页面数据
-func (e *SysDept) SetDeptPage(c *dto2.SysDeptGetPageReq) (m []models.SysDept, err error) {
+func (e *SysDept) SetDeptPage(c *dto.SysDeptGetPageReq) (m []models.SysDept, err error) {
 	var list []models.SysDept
 	err = e.getList(c, &list)
 	for i := 0; i < len(list); i++ {
@@ -238,7 +238,7 @@ func (e *SysDept) deptPageCall(deptlist *[]models.SysDept, menu models.SysDept) 
 // GetWithRoleId 获取角色的部门ID集合
 func (e *SysDept) GetWithRoleId(roleId int) ([]int, error) {
 	deptIds := make([]int, 0)
-	deptList := make([]dto2.DeptIdList, 0)
+	deptList := make([]dto.DeptIdList, 0)
 	if err := e.Orm.Table("sys_role_dept").
 		Select("sys_role_dept.dept_id").
 		Joins("LEFT JOIN sys_dept on sys_dept.dept_id=sys_role_dept.dept_id").
@@ -253,20 +253,20 @@ func (e *SysDept) GetWithRoleId(roleId int) ([]int, error) {
 	return deptIds, nil
 }
 
-func (e *SysDept) SetDeptLabel() (m []dto2.DeptLabel, err error) {
+func (e *SysDept) SetDeptLabel() (m []dto.DeptLabel, err error) {
 	list := make([]models.SysDept, 0)
 	err = e.Orm.Find(&list).Error
 	if err != nil {
 		log.Error("find dept list error, %s", err.Error())
 		return
 	}
-	m = make([]dto2.DeptLabel, 0)
-	var item dto2.DeptLabel
+	m = make([]dto.DeptLabel, 0)
+	var item dto.DeptLabel
 	for i := range list {
 		if list[i].ParentId != 0 {
 			continue
 		}
-		item = dto2.DeptLabel{}
+		item = dto.DeptLabel{}
 		item.Id = list[i].DeptId
 		item.Label = list[i].DeptName
 		deptInfo := deptLabelCall(&list, item)
@@ -276,15 +276,15 @@ func (e *SysDept) SetDeptLabel() (m []dto2.DeptLabel, err error) {
 }
 
 // deptLabelCall
-func deptLabelCall(deptList *[]models.SysDept, dept dto2.DeptLabel) dto2.DeptLabel {
+func deptLabelCall(deptList *[]models.SysDept, dept dto.DeptLabel) dto.DeptLabel {
 	list := *deptList
-	var mi dto2.DeptLabel
-	childrenList := make([]dto2.DeptLabel, 0)
+	var mi dto.DeptLabel
+	childrenList := make([]dto.DeptLabel, 0)
 	for j := 0; j < len(list); j++ {
 		if dept.Id != list[j].ParentId {
 			continue
 		}
-		mi = dto2.DeptLabel{Id: list[j].DeptId, Label: list[j].DeptName, Children: []dto2.DeptLabel{}}
+		mi = dto.DeptLabel{Id: list[j].DeptId, Label: list[j].DeptName, Children: []dto.DeptLabel{}}
 		ms := deptLabelCall(deptList, mi)
 		childrenList = append(childrenList, ms)
 	}

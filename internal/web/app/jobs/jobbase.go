@@ -4,7 +4,7 @@ import (
 	"fmt"
 	log "github.com/go-admin-team/go-admin-core/logger"
 	"github.com/go-admin-team/go-admin-core/sdk"
-	models2 "go-admin/internal/web/app/jobs/models"
+	"go-admin/internal/web/app/jobs/models"
 	"gorm.io/gorm"
 	"time"
 
@@ -108,8 +108,8 @@ func Setup(dbs map[string]*gorm.DB) {
 
 func setup(key string, db *gorm.DB) {
 	crontab := sdk.Runtime.GetCrontabKey(key)
-	sysJob := models2.SysJob{}
-	jobList := make([]models2.SysJob, 0)
+	sysJob := models.SysJob{}
+	jobList := make([]models.SysJob, 0)
 	err := sysJob.GetList(db, &jobList)
 	if err != nil {
 		fmt.Println(time.Now().Format(timeFormat), " [ERROR] JobCore init error", err)

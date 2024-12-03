@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"go-admin/internal/database"
-	global2 "go-admin/internal/global"
+	"go-admin/internal/global"
 	"go-admin/internal/utils/storage"
-	models2 "go-admin/internal/web/app/admin/models"
+	"go-admin/internal/web/app/admin/models"
 	"go-admin/internal/web/app/admin/router"
-	jobs2 "go-admin/internal/web/app/jobs"
+	"go-admin/internal/web/app/jobs"
 	"go-admin/internal/web/middleware"
 	"go-admin/internal/web/middleware/handler"
 	"log"
@@ -67,9 +67,9 @@ func setup() {
 	)
 	//注册监听函数
 	queue := sdk.Runtime.GetMemoryQueue("")
-	queue.Register(global2.LoginLog, models2.SaveLoginLog)
-	queue.Register(global2.OperateLog, models2.SaveOperaLog)
-	queue.Register(global2.ApiCheck, models2.SaveSysApi)
+	queue.Register(global.LoginLog, models.SaveLoginLog)
+	queue.Register(global.OperateLog, models.SaveOperaLog)
+	queue.Register(global.ApiCheck, models.SaveSysApi)
 	go queue.Run()
 
 	usageStr := `starting api server...`
@@ -92,8 +92,8 @@ func run() error {
 	}
 
 	go func() {
-		jobs2.InitJob()
-		jobs2.Setup(sdk.Runtime.GetDb())
+		jobs.InitJob()
+		jobs.Setup(sdk.Runtime.GetDb())
 
 	}()
 
@@ -102,7 +102,7 @@ func run() error {
 		q := sdk.Runtime.GetMemoryQueue("")
 		mp := make(map[string]interface{})
 		mp["List"] = routers
-		message, err := sdk.Runtime.GetStreamMessage("", global2.ApiCheck, mp)
+		message, err := sdk.Runtime.GetStreamMessage("", global.ApiCheck, mp)
 		if err != nil {
 			log.Printf("GetStreamMessage error, %s \n", err.Error())
 			//日志报错错误，不中断请求
@@ -126,7 +126,7 @@ func run() error {
 			}
 		}
 	}()
-	fmt.Println(pkg.Red(string(global2.LogoContent)))
+	fmt.Println(pkg.Red(string(global.LogoContent)))
 	tip()
 	fmt.Println(pkg.Green("Server run at:"))
 	fmt.Printf("-  Local:   %s://localhost:%d/ \r\n", "http", config.ApplicationConfig.Port)
@@ -155,7 +155,7 @@ func run() error {
 //var Router runtime.Router
 
 func tip() {
-	usageStr := `欢迎使用 ` + pkg.Green(`go-admin `+global2.Version) + ` 可以使用 ` + pkg.Red(`-h`) + ` 查看命令`
+	usageStr := `欢迎使用 ` + pkg.Green(`go-admin `+global.Version) + ` 可以使用 ` + pkg.Red(`-h`) + ` 查看命令`
 	fmt.Printf("%s \n\n", usageStr)
 }
 

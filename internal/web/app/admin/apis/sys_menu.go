@@ -6,7 +6,7 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/api"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
 	"go-admin/internal/web/app/admin/models"
-	service2 "go-admin/internal/web/app/admin/service"
+	"go-admin/internal/web/app/admin/service"
 	"go-admin/internal/web/app/admin/service/dto"
 )
 
@@ -23,7 +23,7 @@ type SysMenu struct {
 // @Router /api/v1/menu [get]
 // @Security Bearer
 func (e SysMenu) GetPage(c *gin.Context) {
-	s := service2.SysMenu{}
+	s := service.SysMenu{}
 	req := dto.SysMenuGetPageReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -54,7 +54,7 @@ func (e SysMenu) GetPage(c *gin.Context) {
 // @Security Bearer
 func (e SysMenu) Get(c *gin.Context) {
 	req := dto.SysMenuGetReq{}
-	s := new(service2.SysMenu)
+	s := new(service.SysMenu)
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, nil).
@@ -87,7 +87,7 @@ func (e SysMenu) Get(c *gin.Context) {
 // @Security Bearer
 func (e SysMenu) Insert(c *gin.Context) {
 	req := dto.SysMenuInsertReq{}
-	s := new(service2.SysMenu)
+	s := new(service.SysMenu)
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON).
@@ -121,7 +121,7 @@ func (e SysMenu) Insert(c *gin.Context) {
 // @Security Bearer
 func (e SysMenu) Update(c *gin.Context) {
 	req := dto.SysMenuUpdateReq{}
-	s := new(service2.SysMenu)
+	s := new(service.SysMenu)
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON, nil).
@@ -152,7 +152,7 @@ func (e SysMenu) Update(c *gin.Context) {
 // @Security Bearer
 func (e SysMenu) Delete(c *gin.Context) {
 	control := new(dto.SysMenuDeleteReq)
-	s := new(service2.SysMenu)
+	s := new(service.SysMenu)
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(control, binding.JSON).
@@ -180,7 +180,7 @@ func (e SysMenu) Delete(c *gin.Context) {
 // @Router /api/v1/menurole [get]
 // @Security Bearer
 func (e SysMenu) GetMenuRole(c *gin.Context) {
-	s := new(service2.SysMenu)
+	s := new(service.SysMenu)
 	err := e.MakeContext(c).
 		MakeOrm().
 		MakeService(&s.Service).
@@ -250,8 +250,8 @@ func (e SysMenu) GetMenuRole(c *gin.Context) {
 // @Router /api/v1/menuTreeselect/{roleId} [get]
 // @Security Bearer
 func (e SysMenu) GetMenuTreeSelect(c *gin.Context) {
-	m := service2.SysMenu{}
-	r := service2.SysRole{}
+	m := service.SysMenu{}
+	r := service.SysRole{}
 	req := dto.SelectRole{}
 	err := e.MakeContext(c).
 		MakeOrm().

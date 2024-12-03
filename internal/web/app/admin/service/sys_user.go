@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	models2 "go-admin/internal/web/app/admin/models"
+	"go-admin/internal/web/app/admin/models"
 	"go-admin/internal/web/app/admin/service/dto"
 	cDto "go-admin/internal/web/dto"
 	"go-admin/internal/web/middleware/actions"
@@ -18,9 +18,9 @@ type SysUser struct {
 }
 
 // GetPage 获取SysUser列表
-func (e *SysUser) GetPage(c *dto.SysUserGetPageReq, p *actions.DataPermission, list *[]models2.SysUser, count *int64) error {
+func (e *SysUser) GetPage(c *dto.SysUserGetPageReq, p *actions.DataPermission, list *[]models.SysUser, count *int64) error {
 	var err error
-	var data models2.SysUser
+	var data models.SysUser
 
 	err = e.Orm.Debug().Preload("Dept").
 		Scopes(
@@ -38,8 +38,8 @@ func (e *SysUser) GetPage(c *dto.SysUserGetPageReq, p *actions.DataPermission, l
 }
 
 // Get 获取SysUser对象
-func (e *SysUser) Get(d *dto.SysUserById, p *actions.DataPermission, model *models2.SysUser) error {
-	var data models2.SysUser
+func (e *SysUser) Get(d *dto.SysUserById, p *actions.DataPermission, model *models.SysUser) error {
+	var data models.SysUser
 
 	err := e.Orm.Model(&data).Debug().
 		Scopes(
@@ -61,7 +61,7 @@ func (e *SysUser) Get(d *dto.SysUserById, p *actions.DataPermission, model *mode
 // Insert 创建SysUser对象
 func (e *SysUser) Insert(c *dto.SysUserInsertReq) error {
 	var err error
-	var data models2.SysUser
+	var data models.SysUser
 	var i int64
 	err = e.Orm.Model(&data).Where("username = ?", c.Username).Count(&i).Error
 	if err != nil {
@@ -85,7 +85,7 @@ func (e *SysUser) Insert(c *dto.SysUserInsertReq) error {
 // Update 修改SysUser对象
 func (e *SysUser) Update(c *dto.SysUserUpdateReq, p *actions.DataPermission) error {
 	var err error
-	var model models2.SysUser
+	var model models.SysUser
 	db := e.Orm.Scopes(
 		actions.Permission(model.TableName(), p),
 	).First(&model, c.GetId())
@@ -114,7 +114,7 @@ func (e *SysUser) Update(c *dto.SysUserUpdateReq, p *actions.DataPermission) err
 // UpdateAvatar 更新用户头像
 func (e *SysUser) UpdateAvatar(c *dto.UpdateSysUserAvatarReq, p *actions.DataPermission) error {
 	var err error
-	var model models2.SysUser
+	var model models.SysUser
 	db := e.Orm.Scopes(
 		actions.Permission(model.TableName(), p),
 	).First(&model, c.GetId())
@@ -137,7 +137,7 @@ func (e *SysUser) UpdateAvatar(c *dto.UpdateSysUserAvatarReq, p *actions.DataPer
 // UpdateStatus 更新用户状态
 func (e *SysUser) UpdateStatus(c *dto.UpdateSysUserStatusReq, p *actions.DataPermission) error {
 	var err error
-	var model models2.SysUser
+	var model models.SysUser
 	db := e.Orm.Scopes(
 		actions.Permission(model.TableName(), p),
 	).First(&model, c.GetId())
@@ -160,7 +160,7 @@ func (e *SysUser) UpdateStatus(c *dto.UpdateSysUserStatusReq, p *actions.DataPer
 // ResetPwd 重置用户密码
 func (e *SysUser) ResetPwd(c *dto.ResetSysUserPwdReq, p *actions.DataPermission) error {
 	var err error
-	var model models2.SysUser
+	var model models.SysUser
 	db := e.Orm.Scopes(
 		actions.Permission(model.TableName(), p),
 	).First(&model, c.GetId())
@@ -183,7 +183,7 @@ func (e *SysUser) ResetPwd(c *dto.ResetSysUserPwdReq, p *actions.DataPermission)
 // Remove 删除SysUser
 func (e *SysUser) Remove(c *dto.SysUserById, p *actions.DataPermission) error {
 	var err error
-	var data models2.SysUser
+	var data models.SysUser
 
 	db := e.Orm.Model(&data).
 		Scopes(
@@ -206,7 +206,7 @@ func (e *SysUser) UpdatePwd(id int, oldPassword, newPassword string, p *actions.
 	if newPassword == "" {
 		return nil
 	}
-	c := &models2.SysUser{}
+	c := &models.SysUser{}
 
 	err = e.Orm.Model(c).
 		Scopes(
@@ -247,7 +247,7 @@ func (e *SysUser) UpdatePwd(id int, oldPassword, newPassword string, p *actions.
 	return nil
 }
 
-func (e *SysUser) GetProfile(c *dto.SysUserById, user *models2.SysUser, roles *[]models2.SysRole, posts *[]models2.SysPost) error {
+func (e *SysUser) GetProfile(c *dto.SysUserById, user *models.SysUser, roles *[]models.SysRole, posts *[]models.SysPost) error {
 	err := e.Orm.Preload("Dept").First(user, c.GetId()).Error
 	if err != nil {
 		return err

@@ -2,8 +2,8 @@ package apis
 
 import (
 	"github.com/gin-gonic/gin/binding"
-	models2 "go-admin/internal/web/app/admin/models"
-	service2 "go-admin/internal/web/app/admin/service"
+	"go-admin/internal/web/app/admin/models"
+	"go-admin/internal/web/app/admin/service"
 	"go-admin/internal/web/app/admin/service/dto"
 	"go-admin/internal/web/middleware/actions"
 	"golang.org/x/crypto/bcrypt"
@@ -29,7 +29,7 @@ type SysUser struct {
 // @Router /api/v1/sys-user [get]
 // @Security Bearer
 func (e SysUser) GetPage(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.SysUserGetPageReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -45,7 +45,7 @@ func (e SysUser) GetPage(c *gin.Context) {
 	//数据权限检查
 	p := actions.GetPermissionFromContext(c)
 
-	list := make([]models2.SysUser, 0)
+	list := make([]models.SysUser, 0)
 	var count int64
 
 	err = s.GetPage(&req, p, &list, &count)
@@ -66,7 +66,7 @@ func (e SysUser) GetPage(c *gin.Context) {
 // @Router /api/v1/sys-user/{userId} [get]
 // @Security Bearer
 func (e SysUser) Get(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.SysUserById{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -78,7 +78,7 @@ func (e SysUser) Get(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-	var object models2.SysUser
+	var object models.SysUser
 	//数据权限检查
 	p := actions.GetPermissionFromContext(c)
 	err = s.Get(&req, p, &object)
@@ -100,7 +100,7 @@ func (e SysUser) Get(c *gin.Context) {
 // @Router /api/v1/sys-user [post]
 // @Security Bearer
 func (e SysUser) Insert(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.SysUserInsertReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -135,7 +135,7 @@ func (e SysUser) Insert(c *gin.Context) {
 // @Router /api/v1/sys-user/{userId} [put]
 // @Security Bearer
 func (e SysUser) Update(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.SysUserUpdateReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -170,7 +170,7 @@ func (e SysUser) Update(c *gin.Context) {
 // @Router /api/v1/sys-user/{userId} [delete]
 // @Security Bearer
 func (e SysUser) Delete(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.SysUserById{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -207,7 +207,7 @@ func (e SysUser) Delete(c *gin.Context) {
 // @Router /api/v1/user/avatar [post]
 // @Security Bearer
 func (e SysUser) InsetAvatar(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.UpdateSysUserAvatarReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -256,7 +256,7 @@ func (e SysUser) InsetAvatar(c *gin.Context) {
 // @Router /api/v1/user/status [put]
 // @Security Bearer
 func (e SysUser) UpdateStatus(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.UpdateSysUserStatusReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -293,7 +293,7 @@ func (e SysUser) UpdateStatus(c *gin.Context) {
 // @Router /api/v1/user/pwd/reset [put]
 // @Security Bearer
 func (e SysUser) ResetPwd(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.ResetSysUserPwdReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -330,7 +330,7 @@ func (e SysUser) ResetPwd(c *gin.Context) {
 // @Router /api/v1/user/pwd/set [put]
 // @Security Bearer
 func (e SysUser) UpdatePwd(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.PassWord{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -368,7 +368,7 @@ func (e SysUser) UpdatePwd(c *gin.Context) {
 // @Router /api/v1/user/profile [get]
 // @Security Bearer
 func (e SysUser) GetProfile(c *gin.Context) {
-	s := service2.SysUser{}
+	s := service.SysUser{}
 	req := dto.SysUserById{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -382,9 +382,9 @@ func (e SysUser) GetProfile(c *gin.Context) {
 
 	req.Id = user.GetUserId(c)
 
-	sysUser := models2.SysUser{}
-	roles := make([]models2.SysRole, 0)
-	posts := make([]models2.SysPost, 0)
+	sysUser := models.SysUser{}
+	roles := make([]models.SysRole, 0)
+	posts := make([]models.SysPost, 0)
 	err = s.GetProfile(&req, &sysUser, &roles, &posts)
 	if err != nil {
 		e.Logger.Errorf("get user profile error, %s", err.Error())
@@ -407,8 +407,8 @@ func (e SysUser) GetProfile(c *gin.Context) {
 // @Security Bearer
 func (e SysUser) GetInfo(c *gin.Context) {
 	req := dto.SysUserById{}
-	s := service2.SysUser{}
-	r := service2.SysRole{}
+	s := service.SysUser{}
+	r := service.SysRole{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		MakeService(&r.Service).
@@ -437,7 +437,7 @@ func (e SysUser) GetInfo(c *gin.Context) {
 		mp["permissions"] = list
 		mp["buttons"] = list
 	}
-	sysUser := models2.SysUser{}
+	sysUser := models.SysUser{}
 	req.Id = user.GetUserId(c)
 	err = s.Get(&req, p, &sysUser)
 	if err != nil {

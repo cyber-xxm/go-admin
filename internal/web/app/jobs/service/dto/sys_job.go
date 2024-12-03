@@ -5,17 +5,17 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/api"
 	common "go-admin/internal/database/dto"
 	"go-admin/internal/web/app/jobs/models"
-	dto2 "go-admin/internal/web/dto"
+	"go-admin/internal/web/dto"
 )
 
 type SysJobSearch struct {
-	dto2.Pagination `search:"-"`
-	JobId           int    `form:"jobId" search:"type:exact;column:job_id;table:sys_job"`
-	JobName         string `form:"jobName" search:"type:icontains;column:job_name;table:sys_job"`
-	JobGroup        string `form:"jobGroup" search:"type:exact;column:job_group;table:sys_job"`
-	CronExpression  string `form:"cronExpression" search:"type:exact;column:cron_expression;table:sys_job"`
-	InvokeTarget    string `form:"invokeTarget" search:"type:exact;column:invoke_target;table:sys_job"`
-	Status          int    `form:"status" search:"type:exact;column:status;table:sys_job"`
+	dto.Pagination `search:"-"`
+	JobId          int    `form:"jobId" search:"type:exact;column:job_id;table:sys_job"`
+	JobName        string `form:"jobName" search:"type:icontains;column:job_name;table:sys_job"`
+	JobGroup       string `form:"jobGroup" search:"type:exact;column:job_group;table:sys_job"`
+	CronExpression string `form:"cronExpression" search:"type:exact;column:cron_expression;table:sys_job"`
+	InvokeTarget   string `form:"invokeTarget" search:"type:exact;column:invoke_target;table:sys_job"`
+	Status         int    `form:"status" search:"type:exact;column:status;table:sys_job"`
 }
 
 func (m *SysJobSearch) GetNeedSearch() interface{} {
@@ -31,7 +31,7 @@ func (m *SysJobSearch) Bind(ctx *gin.Context) error {
 	return err
 }
 
-func (m *SysJobSearch) Generate() dto2.Index {
+func (m *SysJobSearch) Generate() dto.Index {
 	o := *m
 	return &o
 }
@@ -54,7 +54,7 @@ func (s *SysJobControl) Bind(ctx *gin.Context) error {
 	return ctx.ShouldBind(s)
 }
 
-func (s *SysJobControl) Generate() dto2.Control {
+func (s *SysJobControl) Generate() dto.Control {
 	cp := *s
 	return &cp
 }
@@ -80,10 +80,10 @@ func (s *SysJobControl) GetId() interface{} {
 }
 
 type SysJobById struct {
-	dto2.ObjectById
+	dto.ObjectById
 }
 
-func (s *SysJobById) Generate() dto2.Control {
+func (s *SysJobById) Generate() dto.Control {
 	cp := *s
 	return &cp
 }
